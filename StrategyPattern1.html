@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Food Delivery - Strategy Pattern</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f3f5; margin: 0; padding: 0; }
+    header { background: #673ab7; color: white; padding: 15px; text-align: center; font-size: 22px; }
+    .container { max-width: 700px; margin: 30px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
+    label { font-weight: bold; }
+    select, button { padding: 10px; margin: 10px 0; width: 100%; border-radius: 6px; border: 1px solid #ccc; }
+    button { background: #673ab7; color: white; border: none; cursor: pointer; font-weight: bold; }
+    button:hover { background: #5e35b1; }
+    #result { margin-top: 15px; padding: 12px; background: #e8eaf6; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <header>🚚 Food Delivery - Strategy Pattern</header>
+  <div class="container">
+    <h2>Choose Your Delivery Option</h2>
+    <label for="deliveryOption">Delivery Method:</label>
+    <select id="deliveryOption">
+      <option value="normal">Normal Delivery (45 min)</option>
+      <option value="express">Express Delivery (20 min)</option>
+      <option value="pickup">Pickup (15 min)</option>
+    </select>
+    <button onclick="placeOrder()">Place Order</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    class NormalDelivery { deliver() { return "🚶 Normal delivery: Will arrive in 45 minutes."; } }
+    class ExpressDelivery { deliver() { return "⚡ Express delivery: Will arrive in 20 minutes."; } }
+    class Pickup { deliver() { return "🏃 Pickup: Ready in 15 minutes, collect at counter."; } }
+
+    class DeliveryContext {
+      setStrategy(strategy) { this.strategy = strategy; }
+      executeStrategy() { return this.strategy.deliver(); }
+    }
+
+    function placeOrder() {
+      const option = document.getElementById("deliveryOption").value;
+      const context = new DeliveryContext();
+
+      if (option === "normal") context.setStrategy(new NormalDelivery());
+      if (option === "express") context.setStrategy(new ExpressDelivery());
+      if (option === "pickup") context.setStrategy(new Pickup());
+
+      document.getElementById("result").innerHTML = "<p><b>" + context.executeStrategy() + "</b></p>";
+    }
+  </script>
+</body>
+</html>
