@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Food Delivery - Observer Pattern</title>
+</head>
+<body>
+  <h2>Order Tracking (Observer Pattern)</h2>
+  <button onclick="updateOrderStatus('Preparing')">Set: Preparing</button>
+  <button onclick="updateOrderStatus('Out for Delivery')">Set: Out for Delivery</button>
+  <button onclick="updateOrderStatus('Delivered')">Set: Delivered</button>
+
+  <div id="logs"></div>
+
+  <script>
+    class Order {
+      constructor() {
+        this.observers = [];
+        this.status = "";
+      }
+      addObserver(observer) {
+        this.observers.push(observer);
+      }
+      notifyObservers() {
+        this.observers.forEach(observer => observer.update(this.status));
+      }
+      setStatus(status) {
+        this.status = status;
+        this.notifyObservers();
+      }
+    }
+
+    class Customer {
+      update(status) {
+        document.getElementById("logs").innerHTML += `<p>Customer notified: Order is ${status}</p>`;
+      }
+    }
+
+    class Restaurant {
+      update(status) {
+        document.getElementById("logs").innerHTML += `<p>Restaurant notified: Order is ${status}</p>`;
+      }
+    }
+
+    const order = new Order();
+    order.addObserver(new Customer());
+    order.addObserver(new Restaurant());
+
+    function updateOrderStatus(status) {
+      order.setStatus(status);
+    }
+  </script>
+</body>
+</html>
