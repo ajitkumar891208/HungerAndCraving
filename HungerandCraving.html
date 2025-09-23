@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Food Delivery Website</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f6f8; }
+    header { background: #ff5722; color: white; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; }
+    nav { display: flex; justify-content: center; background: #333; flex-wrap: wrap; }
+    nav button { flex: 1; padding: 15px; background: #333; color: white; border: none; cursor: pointer; font-size: 16px; }
+    nav button.active { background: #ff5722; }
+    .container { max-width: 900px; margin: 20px auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);}
+    .hidden { display: none; }
+
+    /* Menu styling */
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+    .card { background: #fff; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+    .card img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; }
+    .card h3 { margin: 10px 0; }
+    .card button { background: #ff5722; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .card button:hover { background: #e64a19; }
+
+    /* Common Elements */
+    .btn { padding: 12px 20px; margin: 6px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    #logs, #result, #output { margin-top: 15px; padding: 12px; background: #f1f1f1; border-radius: 8px; min-height: 50px; }
+
+    /* Specific Styling */
+    .btn-prep { background: #2196f3; color: white; }
+    .btn-delivery { background: #ff9800; color: white; }
+    .btn-done { background: #4caf50; color: white; }
+
+    select, button.place-btn { padding: 10px; margin: 10px 0; width: 100%; border-radius: 6px; border: 1px solid #ccc; }
+    .place-btn { background: #673ab7; color: white; border: none; }
+    .place-btn:hover { background: #5e35b1; }
+
+    .btn-order { background: #4caf50; color: white; }
+    .btn-cancel { background: #f44336; color: white; }
+    .btn-track { background: #ff9800; color: white; }
+  </style>
+</head>
+<body>
+  <header>🍔 Food Delivery Website (Design Patterns)</header>
+  <nav>
+    <button id="tab0" class="active" onclick="showTab(0)">Home</button>
+    <button id="tab1" onclick="showTab(1)">Observer Pattern</button>
+    <button id="tab2" onclick="showTab(2)">Strategy Pattern</button>
+    <button id="tab3" onclick="showTab(3)">Command Pattern</button>
+  </nav>
+
+  <!-- Homepage -->
+  <div id="content0" class="container">
+    <h2>Welcome to FoodExpress 🍕</h2>
+    <p>Select your favorite meal and explore how design patterns help manage food delivery systems.</p>
+    <div class="menu-grid">
+      <div class="card">
+        <img src="https://i.ibb.co/b7DwhmB/pizza.jpg" alt="Pizza">
+        <h3>Cheese Pizza</h3>
+        <p>Delicious cheese burst pizza with toppings.</p>
+        <button onclick="alert('Pizza added to cart!')">Add to Cart</button>
+      </div>
+      <div class="card">
+        <img src="https://i.ibb.co/FXJwJ1F/burger.jpg" alt="Burger">
+        <h3>Veg Burger</h3>
+        <p>Juicy veggie burger with crispy fries.</p>
+        <button onclick="alert('Burger added to cart!')">Add to Cart</button>
+      </div>
+      <div class="card">
+        <img src="https://i.ibb.co/nctP18F/drink.jpg" alt="Drinks">
+        <h3>Cold Drink</h3>
+        <p>Refreshing chilled beverage to go with your meal.</p>
+        <button onclick="alert('Drink added to cart!')">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Observer Pattern -->
+  <div id="content1" class="container hidden">
+    <h2>Observer Pattern – Order Tracking</h2>
+    <p>Update the order status to notify both the customer and the restaurant.</p>
+    <button class="btn btn-prep" onclick="updateOrderStatus('Preparing')">Preparing</button>
+    <button class="btn btn-delivery" onclick="updateOrderStatus('Out for Delivery')">Out for Delivery</button>
+    <button class="btn btn-done" onclick="updateOrderStatus('Delivered')">Delivered</button>
+    <div id="logs"></div>
+  </div>
+
+  <!-- Strategy Pattern -->
+  <div id="content2" class="container hidden">
+    <h2>Strategy Pattern – Delivery Options</h2>
+    <label for="deliveryOption"><b>Choose Delivery Method:</b></label>
+    <select id="deliveryOption">
+      <option value="normal">Normal Delivery (45 min)</option>
+      <option value="express">Express Delivery (20 min)</option>
+      <option value="pickup">Pickup (15 min)</option>
+    </select>
+    <button class="place-btn" onclick="placeOrder()">Place Order</button>
+    <div id="result"></div>
+  </div>
+
+  <!-- Command Pattern -->
+  <div id="content3" class="container hidden">
+    <h2>Command Pattern – Order Actions</h2>
+    <button class="btn btn-order" onclick="placeOrderCmd()">Place Order</button>
+    <button class="btn btn-cancel" onclick="cancelOrderCmd()">Cancel Order</button>
+    <button class="btn btn-track" onclick="trackOrderCmd()">Track Order</button>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    // Tab Switching
+    function showTab(n) {
+      document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".container").forEach(div => div.classList.add("hidden"));
+      document.getElementById("tab"+n).classList.add("active");
+      document.getElementById("content"+n).classList.remove("hidden");
+    }
+
+    // ===== OBSERVER PATTERN =====
+    class Order {
+      constructor() { this.observers = []; this.status = ""; }
+      addObserver(observer) { this.observers.push(observer); }
+      notifyObservers() { this.observers.forEach(o => o.update(this.status)); }
+      setStatus(status) { this.status = status; this.notifyObservers(); }
+    }
+    class Customer {
+      update(status) { document.getElementById("logs").innerHTML += `<p>👤 Customer: Order is <b>${status}</b></p>`; }
+    }
+    class Restaurant {
+      update(status) { document.getElementById("logs").innerHTML += `<p>🏪 Restaurant: Order is <b>${status}</b></p>`; }
+    }
+    const order = new Order();
+    order.addObserver(new Customer());
+    order.addObserver(new Restaurant());
+    function updateOrderStatus(status) { order.setStatus(status); }
+
+    // ===== STRATEGY PATTERN =====
+    class NormalDelivery { deliver() { return "🚶 Normal delivery: Will arrive in 45 minutes."; } }
+    class ExpressDelivery { deliver() { return "⚡ Express delivery: Will arrive in 20 minutes."; } }
+    class Pickup { deliver() { return "🏃 Pickup: Ready in 15 minutes, collect at counter."; } }
+    class DeliveryContext {
+      setStrategy(strategy) { this.strategy = strategy; }
+      executeStrategy() { return this.strategy.deliver(); }
+    }
+    function placeOrder() {
+      const option = document.getElementById("deliveryOption").value;
+      const context = new DeliveryContext();
+      if (option === "normal") context.setStrategy(new NormalDelivery());
+      if (option === "express") context.setStrategy(new ExpressDelivery());
+      if (option === "pickup") context.setStrategy(new Pickup());
+      document.getElementById("result").innerHTML = "<p><b>" + context.executeStrategy() + "</b></p>";
+    }
+
+    // ===== COMMAND PATTERN =====
+    class RestaurantSystem {
+      place() { return "✅ Order placed successfully."; }
+      cancel() { return "❌ Order cancelled."; }
+      track() { return "📦 Order is being prepared."; }
+    }
+    class Command { execute() {} }
+    class PlaceOrderCommand extends Command { constructor(system){super();this.system=system;} execute(){return this.system.place();} }
+    class CancelOrderCommand extends Command { constructor(system){super();this.system=system;} execute(){return this.system.cancel();} }
+    class TrackOrderCommand extends Command { constructor(system){super();this.system=system;} execute(){return this.system.track();} }
+    class OrderInvoker {
+      setCommand(command){ this.command = command; }
+      executeCommand(){ return this.command.execute(); }
+    }
+    const system = new RestaurantSystem();
+    const invoker = new OrderInvoker();
+    function placeOrderCmd(){ invoker.setCommand(new PlaceOrderCommand(system)); print(invoker.executeCommand()); }
+    function cancelOrderCmd(){ invoker.setCommand(new CancelOrderCommand(system)); print(invoker.executeCommand()); }
+    function trackOrderCmd(){ invoker.setCommand(new TrackOrderCommand(system)); print(invoker.executeCommand()); }
+    function print(msg){ document.getElementById("output").innerHTML += "<p>" + msg + "</p>"; }
+  </script>
+</body>
+</html>
