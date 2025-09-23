@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Food Delivery - Command Pattern</title>
+</head>
+<body>
+  <h2>Order Actions (Command Pattern)</h2>
+  <button onclick="placeOrder()">Place Order</button>
+  <button onclick="cancelOrder()">Cancel Order</button>
+  <button onclick="trackOrder()">Track Order</button>
+
+  <div id="output"></div>
+
+  <script>
+    class RestaurantSystem {
+      place() { return "Order placed successfully."; }
+      cancel() { return "Order cancelled."; }
+      track() { return "Order is being prepared."; }
+    }
+
+    class Command {
+      execute() {}
+    }
+
+    class PlaceOrderCommand extends Command {
+      constructor(system) { super(); this.system = system; }
+      execute() { return this.system.place(); }
+    }
+
+    class CancelOrderCommand extends Command {
+      constructor(system) { super(); this.system = system; }
+      execute() { return this.system.cancel(); }
+    }
+
+    class TrackOrderCommand extends Command {
+      constructor(system) { super(); this.system = system; }
+      execute() { return this.system.track(); }
+    }
+
+    class OrderInvoker {
+      setCommand(command) { this.command = command; }
+      executeCommand() { return this.command.execute(); }
+    }
+
+    const system = new RestaurantSystem();
+    const invoker = new OrderInvoker();
+
+    function placeOrder() {
+      invoker.setCommand(new PlaceOrderCommand(system));
+      document.getElementById("output").innerHTML += "<p>" + invoker.executeCommand() + "</p>";
+    }
+    function cancelOrder() {
+      invoker.setCommand(new CancelOrderCommand(system));
+      document.getElementById("output").innerHTML += "<p>" + invoker.executeCommand() + "</p>";
+    }
+    function trackOrder() {
+      invoker.setCommand(new TrackOrderCommand(system));
+      document.getElementById("output").innerHTML += "<p>" + invoker.executeCommand() + "</p>";
+    }
+  </script>
+</body>
+</html>
