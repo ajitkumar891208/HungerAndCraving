@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Food Delivery - Strategy Pattern</title>
+</head>
+<body>
+  <h2>Select Delivery Option (Strategy Pattern)</h2>
+  <select id="deliveryOption">
+    <option value="normal">Normal Delivery</option>
+    <option value="express">Express Delivery</option>
+    <option value="pickup">Pickup</option>
+  </select>
+  <button onclick="placeOrder()">Place Order</button>
+
+  <div id="result"></div>
+
+  <script>
+    class NormalDelivery {
+      deliver() {
+        return "Normal delivery: Will arrive in 45 minutes.";
+      }
+    }
+
+    class ExpressDelivery {
+      deliver() {
+        return "Express delivery: Will arrive in 20 minutes.";
+      }
+    }
+
+    class Pickup {
+      deliver() {
+        return "Pickup: Ready in 15 minutes, collect at counter.";
+      }
+    }
+
+    class DeliveryContext {
+      setStrategy(strategy) {
+        this.strategy = strategy;
+      }
+      executeStrategy() {
+        return this.strategy.deliver();
+      }
+    }
+
+    function placeOrder() {
+      const option = document.getElementById("deliveryOption").value;
+      const context = new DeliveryContext();
+
+      if (option === "normal") context.setStrategy(new NormalDelivery());
+      if (option === "express") context.setStrategy(new ExpressDelivery());
+      if (option === "pickup") context.setStrategy(new Pickup());
+
+      document.getElementById("result").innerHTML =
+        "<p>" + context.executeStrategy() + "</p>";
+    }
+  </script>
+</body>
+</html>
