@@ -23,8 +23,8 @@
   </header>
 
   <nav>
-    <button onclick="showPage('unit-1 Login Page')" class="active">Unit</button>
-    <button onclick="showPage('unit-2 Profile Page')" class="active">Unit</button>
+    <button onclick="showPage('unit-1 Login Page')" class="active">unit-1 Login Page</button>
+    <button onclick="showPage('unit-2 Profile Page')" class="active">unit-2 Profile Page</button>
     <button onclick="showPage('integration')">Integration (with Bug)</button>
     <button onclick="showPage('complete')">Complete Website</button>
   </nav>
@@ -36,6 +36,12 @@
     <input type="password" placeholder="Password" id="u_password" />
     <button class="action" onclick="unitLogin()">Login</button>
     <p id="loginMsg"></p>
+  </div>
+
+  <div id="unit-2 Profile Page" class="page">
+      <h3>Profile Card</h3>
+      <p>Name: John Doe</p>
+      <p>Email: john@example.com</p>
   </div>
 
   <!-- Integration Testing Page (with bug) -->
