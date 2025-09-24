@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Website Testing Phases Demo</title>
+  <style>
+    body{font-family:Arial, sans-serif;background:#f4f7fa;margin:0;padding:0}
+    header{background:#2563eb;color:#fff;padding:14px;text-align:center}
+    nav{display:flex;justify-content:center;gap:12px;margin:16px 0}
+    nav button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#e2e8f0}
+    nav button.active{background:#2563eb;color:#fff}
+    .page{display:none;max-width:500px;margin:20px auto;padding:16px;background:#fff;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,0.1)}
+    h3{margin-top:0}
+    input{display:block;margin:6px 0;padding:6px;width:100%;border:1px solid #ccc;border-radius:4px}
+    button.action{margin-top:6px;background:#2563eb;color:#fff;padding:8px 12px;border:0;border-radius:4px;cursor:pointer}
+    #loginMsg,#intMsg{margin-top:8px;font-weight:bold}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Website Testing Phases Demo</h1>
+  </header>
+
+  <nav>
+    <button onclick="showPage('unit')" class="active">Unit</button>
+    <button onclick="showPage('integration')">Integration (with Bug)</button>
+    <button onclick="showPage('complete')">Complete Website</button>
+  </nav>
+
+  <!-- Unit Testing Page -->
+  <div id="unit" class="page" style="display:block">
+    <h3>Unit Test: Login Form</h3>
+    <input type="text" placeholder="Username" id="u_username" />
+    <input type="password" placeholder="Password" id="u_password" />
+    <button class="action" onclick="unitLogin()">Login</button>
+    <p id="loginMsg"></p>
+  </div>
+
+  <!-- Integration Testing Page (with bug) -->
+  <div id="integration" class="page">
+    <h3>Integration Test: Login + Profile</h3>
+    <input type="text" placeholder="Username" id="i_username">
+    <input type="password" placeholder="Password" id="i_password">
+    <button class="action" onclick="doLoginBug()">Login</button>
+    <p id="intMsg"></p>
+
+    <div id="i_profile" style="display:none;margin-top:12px;padding:10px;border:1px solid #ddd;border-radius:6px">
+      <h4>Profile Card</h4>
+      <p>Name: John Doe</p>
+      <p>Email: john@example.com</p>
+    </div>
+  </div>
+
+  <!-- Complete Website (fixed) -->
+  <div id="complete" class="page">
+    <h3>Complete Website</h3>
+    <div id="loginBox">
+      <input type="text" placeholder="Username" id="c_username">
+      <input type="password" placeholder="Password" id="c_password">
+      <button class="action" onclick="doLoginFixed()">Login</button>
+      <p id="c_loginMsg"></p>
+    </div>
+
+    <div id="c_profile" style="display:none;margin-top:12px;padding:10px;border:1px solid #ddd;border-radius:6px">
+      <h4>Profile Card</h4>
+      <p>Name: John Doe</p>
+      <p>Email: john@example.com</p>
+      <button class="action" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <script>
+    // Navigation
+    function showPage(id){
+      document.querySelectorAll('.page').forEach(p=>p.style.display='none')
+      document.getElementById(id).style.display='block'
+      document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'))
+      event.target.classList.add('active')
+    }
+
+    // Unit Test Function
+    function unitLogin(){
+      let user = document.getElementById("u_username").value;
+      let pass = document.getElementById("u_password").value;
+      if(user === "test" && pass === "1234"){
+        document.getElementById("loginMsg").innerText = "✅ Unit Login works!";
+      } else {
+        document.getElementById("loginMsg").innerText = "❌ Wrong credentials";
+      }
+    }
+
+    // Integration Test (with Bug)
+    function doLoginBug(){
+      let user = document.getElementById("i_username").value;
+      let pass = document.getElementById("i_password").value;
+      // Intentional bug: wrong variable name 'pas'
+      if(user === "test" && pas === "1234"){
+        document.getElementById("i_profile").style.display = "block";
+        document.getElementById("intMsg").innerText = "✅ Integrated Login works!";
+      } else {
+        document.getElementById("intMsg").innerText = "❌ Integration failed! (bug triggered)";
+      }
+    }
+
+    // Complete Website (Fixed)
+    function doLoginFixed(){
+      let user = document.getElementById("c_username").value;
+      let pass = document.getElementById("c_password").value;
+      if(user === "test" && pass === "1234"){
+        document.getElementById("c_profile").style.display = "block";
+        document.getElementById("loginBox").style.display = "none";
+      } else {
+        document.getElementById("c_loginMsg").innerText = "❌ Wrong credentials";
+      }
+    }
+
+    function logout(){
+      document.getElementById("c_profile").style.display = "none";
+      document.getElementById("loginBox").style.display = "block";
+      document.getElementById("c_username").value = "";
+      document.getElementById("c_password").value = "";
+      document.getElementById("c_loginMsg").innerText = "";
+    }
+  </script>
+</body>
+</html>

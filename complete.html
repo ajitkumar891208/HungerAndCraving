@@ -1,0 +1,39 @@
+<!-- complete.html -->
+<h2>Complete Website</h2>
+<div id="app">
+  <!-- Login -->
+  <div id="loginBox">
+    <h3>Login</h3>
+    <input type="text" placeholder="Username" id="username">
+    <input type="password" placeholder="Password" id="password">
+    <button onclick="doLogin()">Login</button>
+    <p id="loginMsg"></p>
+  </div>
+
+  <!-- Profile -->
+  <div id="profile" style="display:none">
+    <h3>Profile Card</h3>
+    <p>Name: John Doe</p>
+    <p>Email: john@example.com</p>
+    <button onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<script>
+  function doLogin() {
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
+
+    if(user === "test" && pass === "1234"){
+      document.getElementById("profile").style.display = "block";
+      document.getElementById("loginBox").style.display = "none";
+    } else {
+      document.getElementById("loginMsg").innerText = "❌ Wrong credentials";
+    }
+  }
+
+  function logout(){
+    document.getElementById("profile").style.display = "none";
+    document.getElementById("loginBox").style.display = "block";
+  }
+</script>

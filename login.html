@@ -1,0 +1,20 @@
+<!-- login.html -->
+<div id="login">
+  <h3>Login Form</h3>
+  <input type="text" placeholder="Username" id="username" />
+  <input type="password" placeholder="Password" id="password" />
+  <button onclick="unitLogin()">Login</button>
+  <p id="loginMsg"></p>
+</div>
+
+<script>
+  function unitLogin() {
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
+    if(user === "test" && pass === "1234"){
+      document.getElementById("loginMsg").innerText = "✅ Unit Login works!";
+    } else {
+      document.getElementById("loginMsg").innerText = "❌ Wrong credentials";
+    }
+  }
+</script>
