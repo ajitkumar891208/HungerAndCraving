@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Website Testing Phases Demo</title>
+  <style>
+    body{font-family:Arial, sans-serif;background:#f4f7fa;margin:0;padding:0}
+    header{background:#2563eb;color:#fff;padding:14px;text-align:center}
+    nav{display:flex;justify-content:center;gap:12px;margin:16px 0;flex-wrap:wrap}
+    nav button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#e2e8f0}
+    nav button.active{background:#2563eb;color:#fff}
+    .content{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+    .page{display:none;flex:1;min-width:300px;max-width:500px;padding:16px;background:#fff;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,0.1)}
+    h3{margin-top:0}
+    input{display:block;margin:6px 0;padding:6px;width:100%;border:1px solid #ccc;border-radius:4px}
+    button.action{margin-top:6px;background:#2563eb;color:#fff;padding:8px 12px;border:0;border-radius:4px;cursor:pointer}
+    #loginMsg,#intMsg,#c_loginMsg,#perfMsg,#stressMsg{margin-top:8px;font-weight:bold}
+    .log-panel{flex:1;min-width:260px;max-width:400px;background:#fff;padding:16px;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,0.1);max-height:400px;overflow:auto}
+    .log-entry{border-bottom:1px solid #eee;padding:6px 0;font-size:14px}
+    .pass{color:green;font-weight:bold}
+    .fail{color:red;font-weight:bold}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Website Testing Phases Demo</h1>
+  </header>
+
+  <nav>
+    <button onclick="showPage('unit')" class="active">Unit</button>
+    <button onclick="showPage('integration')">Integration (with Bug)</button>
+    <button onclick="showPage('complete')">Complete Website</button>
+    <button onclick="showPage('performance')">Performance Test</button>
+    <button onclick="showPage('stress')">Stress Test</button>
+  </nav>
+
+  <div class="content">
+    <!-- Unit Testing Page -->
+    <div id="unit" class="page" style="display:block">
+      <h3>Unit Test: Login Form</h3>
+      <input type="text" placeholder="Username" id="u_username" />
+      <input type="password" placeholder="Password" id="u_password" />
+      <button class="action" onclick="unitLogin()">Login</button>
+      <p id="loginMsg"></p>
+    </div>
+
+    <!-- Integration Testing Page (with bug) -->
+    <div id="integration" class="page">
+      <h3>Integration Test: Login + Profile</h3>
+      <input type="text" placeholder="Username" id="i_username">
+      <input type="password" placeholder="Password" id="i_password">
+      <button class="action" onclick="doLoginBug()">Login</button>
+      <p id="intMsg"></p>
+
+      <div id="i_profile" style="display:none;margin-top:12px;padding:10px;border:1px solid #ddd;border-radius:6px">
+        <h4>Profile Card</h4>
+        <p>Name: John Doe</p>
+        <p>Email: john@example.com</p>
+      </div>
+    </div>
+
+    <!-- Complete Website (fixed) -->
+    <div id="complete" class="page">
+      <h3>Complete Website</h3>
+      <div id="loginBox">
+        <input type="text" placeholder="Username" id="c_username">
+        <input type="password" placeholder="Password" id="c_password">
+        <button class="action" onclick="doLoginFixed()">Login</button>
+        <p id="c_loginMsg"></p>
+      </div>
+
+      <div id="c_profile" style="display:none;margin-top:12px;padding:10px;border:1px solid #ddd;border-radius:6px">
+        <h4>Profile Card</h4>
+        <p>Name: John Doe</p>
+        <p>Email: john@example.com</p>
+        <button class="action" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Performance Test -->
+    <div id="performance" class="page">
+      <h3>Performance Test Simulation</h3>
+      <p>Simulate multiple login attempts to measure response time.</p>
+      <button class="action" onclick="runPerformanceTest()">Run Performance Test</button>
+      <p id="perfMsg"></p>
+      <ul id="perfResults"></ul>
+    </div>
+
+    <!-- Stress Test -->
+    <div id="stress" class="page">
+      <h3>Stress Test Simulation</h3>
+      <p>Simulate 100 rapid login attempts to check overload behavior.</p>
+      <button class="action" onclick="runStressTest()">Run Stress Test</button>
+      <p id="stressMsg"></p>
+      <ul id="stressResults"></ul>
+    </div>
+
+    <!-- Visual Log Panel -->
+    <div class="log-panel">
+      <h3>Test Log</h3>
+      <div id="logEntries"></div>
+    </div>
+  </div>
+
+  <script>
+    function logResult(phase, test, ok, details=""){
+      const div = document.createElement('div')
+      div.classList.add('log-entry')
+      div.innerHTML = `<span>[${phase}]</span> ${test} → <span class="${ok? 'pass':'fail'}">${ok? 'PASS':'FAIL'}</span> ${details}`
+      document.getElementById('logEntries').prepend(div)
+    }
+
+    // Navigation
+    function showPage(id){
+      document.querySelectorAll('.page').forEach(p=>p.style.display='none')
+      document.getElementById(id).style.display='block'
+      document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'))
+      event.target.classList.add('active')
+    }
+
+    // Unit Test Function
+    function unitLogin(){
+      let user = document.getElementById("u_username").value;
+      let pass = document.getElementById("u_password").value;
+      if(user === "test" && pass === "1234"){
+        document.getElementById("loginMsg").innerText = "✅ Unit Login works!";
+        logResult('Unit','Login with correct credentials',true)
+      } else {
+        document.getElementById("loginMsg").innerText = "❌ Wrong credentials";
+        logResult('Unit','Login with wrong credentials',false)
+      }
+    }
+
+    // Integration Test (with Bug)
+    function doLoginBug(){
+      let user = document.getElementById("i_username").value;
+      let pass = document.getElementById("i_password").value;
+      try{
+        if(user === "test" && pas === "1234"){ // bug: 'pas' not defined
+          document.getElementById("i_profile").style.display = "block";
+          document.getElementById("intMsg").innerText = "✅ Integrated Login works!";
+          logResult('Integration','Login+Profile integration',true)
+        } else {
+          document.getElementById("intMsg").innerText = "❌ Integration failed! (bug triggered)";
+          logResult('Integration','Integration check',false,'Bug triggered')
+        }
+      }catch(e){
+        document.getElementById("intMsg").innerText = "❌ Integration crashed!";
+        logResult('Integration','Integration crash',false,e.message)
+      }
+    }
+
+    // Complete Website (Fixed)
+    function doLoginFixed(){
+      let user = document.getElementById("c_username").value;
+      let pass = document.getElementById("c_password").value;
+      if(user === "test" && pass === "1234"){
+        document.getElementById("c_profile").style.display = "block";
+        document.getElementById("loginBox").style.display = "none";
+        logResult('Complete','Login successful',true)
+      } else {
+        document.getElementById("c_loginMsg").innerText = "❌ Wrong credentials";
+        logResult('Complete','Login failed',false)
+      }
+    }
+
+    function logout(){
+      document.getElementById("c_profile").style.display = "none";
+      document.getElementById("loginBox").style.display = "block";
+      document.getElementById("c_username").value = "";
+      document.getElementById("c_password").value = "";
+      document.getElementById("c_loginMsg").innerText = "";
+      logResult('Complete','User logged out',true)
+    }
+
+    // Performance Simulation
+    function runPerformanceTest(){
+      document.getElementById('perfResults').innerHTML = ''
+      const attempts = 5
+      let completed = 0
+      let totalTime = 0
+
+      for(let i=1;i<=attempts;i++){
+        const start = performance.now()
+        // Simulate login check
+        setTimeout(()=>{
+          const end = performance.now()
+          const duration = (end-start).toFixed(2)
+          totalTime += parseFloat(duration)
+          const li = document.createElement('li')
+          li.textContent = `Attempt ${i}: ${duration} ms`
+          document.getElementById('perfResults').appendChild(li)
+          logResult('Performance',`Attempt ${i}`,true,`${duration} ms`)
+          completed++
+          if(completed===attempts){
+            const avg = (totalTime/attempts).toFixed(2)
+            document.getElementById('perfMsg').innerText = `Average response time: ${avg} ms`
+            logResult('Performance','Average response time',true,`${avg} ms`)
+          }
+        },Math.random()*300)
+      }
+    }
+
+    // Stress Simulation
+    function runStressTest(){
+      document.getElementById('stressResults').innerHTML = ''
+      const attempts = 100
+      let completed = 0
+      let failures = 0
+      const startAll = performance.now()
+
+      for(let i=1;i<=attempts;i++){
+        setTimeout(()=>{
+          const ok = Math.random()>0.1 // 10% fail rate to simulate overload
+          const li = document.createElement('li')
+          li.textContent = `Attempt ${i}: ${ok? 'PASS':'FAIL'}`
+          li.style.color = ok? 'green':'red'
+          document.getElementById('stressResults').appendChild(li)
+          logResult('Stress',`Attempt ${i}`,ok)
+          if(!ok) failures++
+          completed++
+          if(completed===attempts){
+            const endAll = performance.now()
+            const duration = (endAll-startAll).toFixed(2)
+            document.getElementById('stressMsg').innerText = `Completed ${attempts} attempts in ${duration} ms with ${failures} failures.`
+            logResult('Stress','Summary',failures===0,true,`${failures} failures in ${duration} ms`)
+          }
+        },Math.random()*200)
+      }
+    }
+  </script>
+</body>
+</html>
