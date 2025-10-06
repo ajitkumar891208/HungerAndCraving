@@ -3,56 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Black-Box & White-Box Testing Demo</title>
+  <title>Data Type Testing Demo</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(120deg, #1c1c1c, #333);
-      color: #fff;
+      background: linear-gradient(120deg, #1a1a1a, #2a2a2a);
+      color: #f0f0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: start;
+      min-height: 100vh;
       margin: 0;
+      padding-top: 30px;
     }
 
     h1 {
+      color: #00e6b8;
       margin-bottom: 10px;
-      color: #00ffcc;
     }
 
     .container {
       background-color: #222;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
-      width: 300px;
-      text-align: center;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0, 255, 200, 0.4);
+      width: 350px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      text-align: left;
+      color: #ddd;
     }
 
     input {
-      width: 90%;
+      width: 94%;
       padding: 8px;
-      margin: 8px 0;
+      margin: 5px 0 10px 0;
       border-radius: 5px;
       border: none;
       outline: none;
     }
 
     button {
-      background-color: #00ffcc;
+      background-color: #00e6b8;
       border: none;
-      padding: 10px 15px;
+      padding: 10px;
+      width: 100%;
       border-radius: 5px;
       cursor: pointer;
-      margin-top: 10px;
-      width: 95%;
       font-weight: bold;
     }
 
     button:hover {
-      background-color: #00ccaa;
+      background-color: #00b89a;
     }
 
     .output {
@@ -60,7 +67,8 @@
       padding: 10px;
       border-radius: 5px;
       background: #111;
-      min-height: 25px;
+      min-height: 30px;
+      font-size: 14px;
     }
 
     pre {
@@ -72,66 +80,115 @@
       margin-top: 15px;
       display: none;
       overflow-x: auto;
+      font-size: 12px;
+    }
+
+    .footer {
+      font-size: 13px;
+      color: #888;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-
-  <h1>Testing Demo Portal</h1>
+  <h1>🧪 Data Type Testing Demo</h1>
   <div class="container">
-    <h3>Login Page</h3>
-    <input type="text" id="username" placeholder="Enter Username"><br>
-    <input type="password" id="password" placeholder="Enter Password"><br>
-    <button onclick="login()">Login</button>
+    <label>Text (Name):</label>
+    <input type="text" id="textInput" placeholder="Enter your name">
+
+    <label>Email:</label>
+    <input type="email" id="emailInput" placeholder="Enter your email">
+
+    <label>Number (Age):</label>
+    <input type="number" id="numberInput" placeholder="Enter your age">
+
+    <label>Password:</label>
+    <input type="password" id="passwordInput" placeholder="Enter password">
+
+    <label>Date of Birth:</label>
+    <input type="date" id="dateInput">
+
+    <button onclick="validateForm()">Validate Inputs</button>
     <button onclick="toggleCode()">Show Code (White-Box)</button>
     <div class="output" id="result"></div>
 
     <pre id="code">
-function login(username, password) {
-  if (username === "" || password === "") {
-    return "Fields cannot be empty";
-  }
+function validateForm() {
+  const name = document.getElementById('textInput').value.trim();
+  const email = document.getElementById('emailInput').value.trim();
+  const age = document.getElementById('numberInput').value;
+  const password = document.getElementById('passwordInput').value;
+  const date = document.getElementById('dateInput').value;
 
-  let storedUser = "admin";
-  let storedPass = "admin123";
+  // Name: must be alphabetic
+  if (!/^[A-Za-z\s]+$/.test(name)) return "❌ Invalid Name: Only letters allowed.";
 
-  if (username === storedUser && password === storedPass) {
-    return "Login successful";
-  } else {
-    return "Invalid username or password";
-  }
+  // Email format validation
+  if (!/^[\w.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email))
+    return "❌ Invalid Email Format.";
+
+  // Age: must be between 18 and 99
+  if (age < 18 || age > 99) return "❌ Invalid Age: Must be between 18–99.";
+
+  // Password: min 6 chars, must contain a number
+  if (password.length < 6 || !/[0-9]/.test(password))
+    return "❌ Weak Password: Min 6 chars and include a number.";
+
+  // Date must not be in the future
+  const today = new Date();
+  const inputDate = new Date(date);
+  if (inputDate > today) return "❌ Invalid Date: Cannot be in the future.";
+
+  return "✅ All inputs are valid!";
 }
     </pre>
   </div>
 
-  <script>
-    function login() {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      let result = document.getElementById('result');
+  <div class="footer">
+    <p>Use this page to demonstrate <strong>Black-Box</strong> & <strong>White-Box</strong> testing concepts.</p>
+  </div>
 
-      // BLACK-BOX TEST CONDITIONS SIMULATION
-      if (username === "" || password === "") {
-        result.innerText = "⚠️ Fields cannot be empty";
+  <script>
+    function validateForm() {
+      const name = document.getElementById('textInput').value.trim();
+      const email = document.getElementById('emailInput').value.trim();
+      const age = document.getElementById('numberInput').value;
+      const password = document.getElementById('passwordInput').value;
+      const date = document.getElementById('dateInput').value;
+
+      let resultText = "";
+
+      // VALIDATION LOGIC (Simulates different test cases)
+      if (!/^[A-Za-z\s]+$/.test(name)) {
+        resultText = "❌ Invalid Name: Only letters allowed.";
       }
-      else if (username.includes("'") || username.includes("--")) {
-        result.innerText = "🚫 SQL Injection attempt blocked";
+      else if (!/^[\\w.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$/.test(email)) {
+        resultText = "❌ Invalid Email Format.";
       }
-      else if (username === "admin" && password === "admin123") {
-        result.innerText = "✅ Login successful! Redirecting...";
+      else if (age < 18 || age > 99 || age === "") {
+        resultText = "❌ Invalid Age: Must be between 18–99.";
+      }
+      else if (password.length < 6 || !/[0-9]/.test(password)) {
+        resultText = "❌ Weak Password: Min 6 chars and include a number.";
       }
       else {
-        result.innerText = "❌ Invalid username or password";
+        const today = new Date();
+        const inputDate = new Date(date);
+        if (!date) {
+          resultText = "❌ Please select a date.";
+        } else if (inputDate > today) {
+          resultText = "❌ Invalid Date: Cannot be in the future.";
+        } else {
+          resultText = "✅ All inputs are valid!";
+        }
       }
+
+      document.getElementById('result').innerText = resultText;
     }
 
     function toggleCode() {
       let codeBlock = document.getElementById('code');
-      if (codeBlock.style.display === "none" || codeBlock.style.display === "") {
-        codeBlock.style.display = "block";
-      } else {
-        codeBlock.style.display = "none";
-      }
+      codeBlock.style.display = codeBlock.style.display === "block" ? "none" : "block";
     }
   </script>
 </body>
