@@ -96,8 +96,7 @@
     <label>Text (Name):</label>
     <input type="text" id="textInput" placeholder="Enter your name">
 
-    <label>Email:</label>
-    <input type="email" id="emailInput" placeholder="Enter your email">
+
 
     <label>Number (Age):</label>
     <input type="number" id="numberInput" placeholder="Enter your age">
@@ -123,9 +122,7 @@ function validateForm() {
   // Name: must be alphabetic
   if (!/^[A-Za-z\s]+$/.test(name)) return "❌ Invalid Name: Only letters allowed.";
 
-  // Email format validation
-  if (!/^[\w.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email))
-    return "❌ Invalid Email Format.";
+
 
   // Age: must be between 18 and 99
   if (age < 18 || age > 99) return "❌ Invalid Age: Must be between 18–99.";
