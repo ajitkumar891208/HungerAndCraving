@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black-Box & White-Box Testing Demo</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #1c1c1c, #333);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #00ffcc;
+    }
+
+    .container {
+      background-color: #222;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+      width: 300px;
+      text-align: center;
+    }
+
+    input {
+      width: 90%;
+      padding: 8px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      background-color: #00ffcc;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 95%;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #00ccaa;
+    }
+
+    .output {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      background: #111;
+      min-height: 25px;
+    }
+
+    pre {
+      background-color: #111;
+      color: #00ffcc;
+      text-align: left;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 15px;
+      display: none;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Testing Demo Portal</h1>
+  <div class="container">
+    <h3>Login Page</h3>
+    <input type="text" id="username" placeholder="Enter Username"><br>
+    <input type="password" id="password" placeholder="Enter Password"><br>
+    <button onclick="login()">Login</button>
+    <button onclick="toggleCode()">Show Code (White-Box)</button>
+    <div class="output" id="result"></div>
+
+    <pre id="code">
+function login(username, password) {
+  if (username === "" || password === "") {
+    return "Fields cannot be empty";
+  }
+
+  let storedUser = "admin";
+  let storedPass = "admin123";
+
+  if (username === storedUser && password === storedPass) {
+    return "Login successful";
+  } else {
+    return "Invalid username or password";
+  }
+}
+    </pre>
+  </div>
+
+  <script>
+    function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      let result = document.getElementById('result');
+
+      // BLACK-BOX TEST CONDITIONS SIMULATION
+      if (username === "" || password === "") {
+        result.innerText = "⚠️ Fields cannot be empty";
+      }
+      else if (username.includes("'") || username.includes("--")) {
+        result.innerText = "🚫 SQL Injection attempt blocked";
+      }
+      else if (username === "admin" && password === "admin123") {
+        result.innerText = "✅ Login successful! Redirecting...";
+      }
+      else {
+        result.innerText = "❌ Invalid username or password";
+      }
+    }
+
+    function toggleCode() {
+      let codeBlock = document.getElementById('code');
+      if (codeBlock.style.display === "none" || codeBlock.style.display === "") {
+        codeBlock.style.display = "block";
+      } else {
+        codeBlock.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>

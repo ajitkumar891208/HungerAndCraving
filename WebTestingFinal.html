@@ -155,7 +155,7 @@
       let pass = document.getElementById("i_password").value;
       try{
         // Intentional bug: wrong variable name 'pas'
-        if(user === "test" && pas === "1234"){
+        if(user === "test" && pass === "1234"){
           document.getElementById("i_profile").style.display = "block";
           document.getElementById("intMsg").innerText = "✅ Integrated Login works!";
           logResult("Integration success", true)
