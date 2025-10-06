@@ -96,7 +96,8 @@
     <label>Text (Name):</label>
     <input type="text" id="textInput" placeholder="Enter your name">
 
-
+    <label>Email:</label>
+    <input type="email" id="emailInput" placeholder="Enter your email">
 
     <label>Number (Age):</label>
     <input type="number" id="numberInput" placeholder="Enter your age">
@@ -119,22 +120,22 @@ function validateForm() {
   const password = document.getElementById('passwordInput').value;
   const date = document.getElementById('dateInput').value;
 
-  // Name: must be alphabetic
-  if (!/^[A-Za-z\s]+$/.test(name)) return "❌ Invalid Name: Only letters allowed.";
+  if (!/^[A-Za-z\s]+$/.test(name))
+    return "❌ Invalid Name: Only letters allowed.";
 
+  if (!/^[\w.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email))
+    return "❌ Invalid Email Format.";
 
+  if (age < 18 || age > 99)
+    return "❌ Invalid Age: Must be between 18–99.";
 
-  // Age: must be between 18 and 99
-  if (age < 18 || age > 99) return "❌ Invalid Age: Must be between 18–99.";
-
-  // Password: min 6 chars, must contain a number
   if (password.length < 6 || !/[0-9]/.test(password))
     return "❌ Weak Password: Min 6 chars and include a number.";
 
-  // Date must not be in the future
   const today = new Date();
   const inputDate = new Date(date);
-  if (inputDate > today) return "❌ Invalid Date: Cannot be in the future.";
+  if (inputDate > today)
+    return "❌ Invalid Date: Cannot be in the future.";
 
   return "✅ All inputs are valid!";
 }
@@ -149,34 +150,40 @@ function validateForm() {
     function validateForm() {
       const name = document.getElementById('textInput').value.trim();
       const email = document.getElementById('emailInput').value.trim();
-      const age = document.getElementById('numberInput').value;
+      const age = parseInt(document.getElementById('numberInput').value);
       const password = document.getElementById('passwordInput').value;
       const date = document.getElementById('dateInput').value;
 
       let resultText = "";
 
-      // VALIDATION LOGIC (Simulates different test cases)
+      // ✅ Name: only alphabets and spaces allowed
       if (!/^[A-Za-z\s]+$/.test(name)) {
         resultText = "❌ Invalid Name: Only letters allowed.";
       }
-      else if (!/^[\\w.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$/.test(email)) {
+      // ✅ Email format validation (fixed regex)
+      else if (!/^[\w.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) {
         resultText = "❌ Invalid Email Format.";
       }
-      else if (age < 18 || age > 99 || age === "") {
+      // ✅ Age: must be within range
+      else if (isNaN(age) || age < 18 || age > 99) {
         resultText = "❌ Invalid Age: Must be between 18–99.";
       }
+      // ✅ Password: length + numeric check
       else if (password.length < 6 || !/[0-9]/.test(password)) {
         resultText = "❌ Weak Password: Min 6 chars and include a number.";
       }
+      // ✅ Date validation
       else {
-        const today = new Date();
-        const inputDate = new Date(date);
         if (!date) {
           resultText = "❌ Please select a date.";
-        } else if (inputDate > today) {
-          resultText = "❌ Invalid Date: Cannot be in the future.";
         } else {
-          resultText = "✅ All inputs are valid!";
+          const today = new Date();
+          const inputDate = new Date(date);
+          if (inputDate > today) {
+            resultText = "❌ Invalid Date: Cannot be in the future.";
+          } else {
+            resultText = "✅ All inputs are valid!";
+          }
         }
       }
 
