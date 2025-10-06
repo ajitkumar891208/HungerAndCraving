@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>White Box Testing Types</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #2b3a55;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 30px;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      background: #e8f0fe;
+    }
+    #infoBox {
+      margin-top: 30px;
+      background: #dfe8f5;
+      border-radius: 10px;
+      padding: 15px;
+      display: none;
+      text-align: left;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>White Box Testing Techniques</h1>
+  <p>Click on each type to learn more</p>
+
+  <div class="container">
+    <div class="card" onclick="showInfo('Unit Testing')">Unit Testing</div>
+    <div class="card" onclick="showInfo('Statement Coverage')">Statement Coverage</div>
+    <div class="card" onclick="showInfo('Branch Coverage')">Branch Coverage</div>
+    <div class="card" onclick="showInfo('Path Coverage')">Path Coverage</div>
+    <div class="card" onclick="showInfo('Condition Coverage')">Condition Coverage</div>
+    <div class="card" onclick="showInfo('Loop Testing')">Loop Testing</div>
+    <div class="card" onclick="showInfo('Control Flow Testing')">Control Flow Testing</div>
+    <div class="card" onclick="showInfo('Data Flow Testing')">Data Flow Testing</div>
+    <div class="card" onclick="showInfo('Mutation Testing')">Mutation Testing</div>
+    <div class="card" onclick="showInfo('Basis Path Testing')">Basis Path Testing</div>
+  </div>
+
+  <div id="infoBox"></div>
+
+  <script>
+    const info = {
+      "Unit Testing": "Tests individual functions or modules to ensure they work correctly in isolation.",
+      "Statement Coverage": "Ensures every statement in the code is executed at least once.",
+      "Branch Coverage": "Checks that all possible branches (true/false) in decisions are executed.",
+      "Path Coverage": "Verifies all possible execution paths in the program have been tested.",
+      "Condition Coverage": "Tests all boolean sub-conditions for both true and false outcomes.",
+      "Loop Testing": "Examines loops for correct entry, exit, and number of iterations.",
+      "Control Flow Testing": "Analyzes logical flow of control and detects unreachable or infinite loops.",
+      "Data Flow Testing": "Focuses on variable definitions and their usage across the code.",
+      "Mutation Testing": "Introduces small code changes (mutations) to check test case effectiveness.",
+      "Basis Path Testing": "Ensures each independent logical path is executed using cyclomatic complexity."
+    };
+
+    function showInfo(type) {
+      const box = document.getElementById("infoBox");
+      box.style.display = "block";
+      box.innerHTML = `<h3>${type}</h3><p>${info[type]}</p>`;
+    }
+  </script>
+
+</body>
+</html>
